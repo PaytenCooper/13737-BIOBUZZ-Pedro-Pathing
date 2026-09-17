@@ -43,6 +43,7 @@ public abstract class ASAuto extends LinearOpMode {
 
     @Override
     public void runOpMode() {
+        // Initialization functions here
         Initialize();
 
         waitForStart();
@@ -50,6 +51,7 @@ public abstract class ASAuto extends LinearOpMode {
         AS_Action[] actions = getActions();
         AS_Action currentAction = null;
 
+        // Main robot loop, process functions here
         while (opModeIsActive() && ( actions.length > 0 )) { // <----------------------------------------------------------------
             if (currentAction == null) {
                 currentAction = actions[0];

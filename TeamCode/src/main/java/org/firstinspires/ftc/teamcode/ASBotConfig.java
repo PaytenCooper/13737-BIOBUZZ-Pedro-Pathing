@@ -5,7 +5,7 @@ import com.pedropathing.geometry.Pose;
 
 public class ASBotConfig {
   /*****************************************************************************
-   ** HARDWARE CONSTANTS
+   ** HARDWARE CONSTANTS - Set these to corresponding name in driver station
    *****************************************************************************/
   public static final String FRONT_RIGHT_WHEEL_NAME = "front_right";
   public static final String FRONT_LEFT_WHEEL_NAME = "front_left";
@@ -33,11 +33,12 @@ public class ASBotConfig {
   /*****************************************************************************
    ** TELEOP CALIBRATION CONSTANTS
    *****************************************************************************/
-  public static final double BASE_SPEED = .6;
+  public static final double BASE_SPEED = .6; // Percentage of motors max speed
 
-  public static final double MAX_BOOST = 0.66; // boost maxes out at an additional 66% of the base speed
+  public static final double MAX_BOOST = 0.66; // Boost maxes out at an additional 66% of the base speed
   public static final double STRAFE_MULT = 1.41;
 
+  // Different launcher speeds in teleop
   public static final int LAUNCHER_DROP_VELOCITY = 300;
   public static final int LAUNCHER_PASSIVE_VELOCITY = 1000;
   public static final int LAUNCHER_VELOCITY = 1300;
@@ -53,7 +54,7 @@ public class ASBotConfig {
 
 
   /*****************************************************************************
-   ** AUTO CALIBRATION CONSTANTS
+   ** AUTO CALIBRATION CONSTANTS - Values used during auto
    *****************************************************************************/
   public static final int AUTO_DRIVE_VELOCITY = 1000;
   public static final int AUTO_PUSHER_VELOCITY = 70000;

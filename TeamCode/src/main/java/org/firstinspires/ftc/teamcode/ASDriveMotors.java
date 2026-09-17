@@ -133,7 +133,7 @@ public class ASDriveMotors {
         this.odometry.setPosition( new Pose2D(DistanceUnit.MM, 0, 0, AngleUnit.DEGREES, 0) );
     }
 
-
+    // Call in auto process loop
     public double process() {
         deltaTime = deltaTimer.seconds();
 
