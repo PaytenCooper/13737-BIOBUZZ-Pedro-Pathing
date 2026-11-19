@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 
-public class ASSpinIntake extends AS_Action {
+public class ASSpinIntake extends ASAction {
     ASAuto auto;
     double mult = 1;
 

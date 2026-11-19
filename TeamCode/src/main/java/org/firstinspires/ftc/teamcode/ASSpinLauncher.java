@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 
-public class ASSpinLauncher extends AS_Action {
+public class ASSpinLauncher extends ASAction {
     ASAuto auto;
 
     public ASSpinLauncher(ASAuto auto) {

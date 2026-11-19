@@ -10,6 +10,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 
+// Not on robot yet
+
 @TeleOp(name="Field Centric (Pedro)", group="!CompDriveCodes")
 public class ASDriveCodeBlue extends LinearOpMode {
 

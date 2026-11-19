@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 
-public class ASStopPusher extends AS_Action {
+public class ASStopPusher extends ASAction {
     ASAuto auto;
 
     public ASStopPusher(ASAuto auto) {

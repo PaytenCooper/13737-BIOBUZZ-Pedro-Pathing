@@ -17,9 +17,12 @@ public class ASLauncher {
 
     private LinearOpMode auto;
 
-    public DcMotorEx launcherLeft;
-    public DcMotorEx launcherRight;
-    Servo light;
+    public DcMotorEx launcher;
+    
+    public Servo adjusterTop;
+    public Servo adjusterBottom;
+    
+    // Servo light;
 
     ASPIDFController launcherPIDFController = new ASPIDFController(0.0004, 0.01, 0/*.00001*/, 0.000);
 
@@ -35,20 +38,31 @@ public class ASLauncher {
     public ASLauncher(LinearOpMode auto) {
         this.auto = auto;
 
-        this.launcherLeft = auto.hardwareMap.get(DcMotorEx.class, ASBotConfig.LAUNCHER_LEFT_NAME);
-        this.launcherRight = auto.hardwareMap.get(DcMotorEx.class, ASBotConfig.LAUNCHER_RIGHT_NAME);
-
-        this.launcherLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        this.launcherRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-
-        this.light = auto.hardwareMap.get(Servo.class, ASBotConfig.LIGHT_NAME);
+        this.launcher = auto.hardwareMap.get(DcMotorEx.class, ASBotConfig.LAUNCHER_NAME);
+        this.adjusterTop = auto.hardwareMap.get(Servo.class, ASBotConfig.ADJUSTER_TOP_NAME);
+        this.adjusterBottom = auto.hardwareMap.get(Servo.class, ASBotConfig.ADJUSTER_BOTTOM_NAME);
+    
+        this.launcher.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        // this.light = auto.hardwareMap.get(Servo.class, ASBotConfig.LIGHT_NAME);
+    }
+    
+    
+    public void TightenAdjuster() {
+        adjusterTop.setPosition(ASBotConfig.ADJUSTER_TIGHTEN_POS);
+        adjusterBottom.setPosition(ASBotConfig.ADJUSTER_TIGHTEN_POS);
+    }
+    
+    
+    public void LoosenAdjuster() {
+        adjusterTop.setPosition(ASBotConfig.ADJUSTER_LOOSEN_POS);
+        adjusterBottom.setPosition(ASBotConfig.ADJUSTER_LOOSEN_POS);
     }
 
 
     public double process() {
         double deltaTime = deltaTimer.seconds();
 
-        double launcherVelocity = launcherLeft.getVelocity();
+        double launcherVelocity = launcher.getVelocity();
 
         if (this.launcherTargetVelocity != 0) {
             double launcherPower = launcherPIDFController.PIDFControl(
@@ -57,26 +71,24 @@ public class ASLauncher {
                     deltaTime
             );
 
-            launcherLeft.setPower(launcherPower);
-            launcherRight.setPower(-launcherPower);
+            launcher.setPower(launcherPower);
         }
         else {
-            launcherLeft.setPower(0);
-            launcherRight.setPower(0);
+            launcher.setPower(0);
         }
 
         deltaTimer.reset();
 
-        // Light
-        if (this.safe) {
-            light.setPosition(ASBotConfig.LIGHT_BLUE);
-        }
-        else if (this.isAtVelocity()) {
-            light.setPosition(ASBotConfig.LIGHT_GREEN);
-        }
-        else {
-            light.setPosition(ASBotConfig.LIGHT_RED);
-        }
+        // // Light
+        // if (this.safe) {
+        //     light.setPosition(ASBotConfig.LIGHT_BLUE);
+        // }
+        // else if (this.isAtVelocity()) {
+        //     light.setPosition(ASBotConfig.LIGHT_GREEN);
+        // }
+        // else {
+        //     light.setPosition(ASBotConfig.LIGHT_RED);
+        // }
 
         // Telemetry
         auto.telemetry.addData("Launcher Velocity", getVelocity());
@@ -104,12 +116,12 @@ public class ASLauncher {
 
 
     public int getVelocity() {
-        return (int)launcherLeft.getVelocity();
+        return (int)launcher.getVelocity();
     }
 
 
     public double getVelocity(AngleUnit angleUnit) {
-        return launcherLeft.getVelocity(angleUnit);
+        return launcher.getVelocity(angleUnit);
     }
 
 

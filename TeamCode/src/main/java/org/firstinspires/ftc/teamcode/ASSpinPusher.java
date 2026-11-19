@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 
-public class ASSpinPusher extends AS_Action {
+public class ASSpinPusher extends ASAction {
     ASAuto auto;
     double mult = 1;
 

@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 
-import com.pedropathing.geometry.Pose;
+// import com.pedropathing.geometry.Pose;
 
 public class ASBotConfig {
   /*****************************************************************************
@@ -15,11 +15,12 @@ public class ASBotConfig {
   public static final String INTAKE_NAME = "intake";
   public static final String PUSHER_NAME = "pusher";
   public static final String STOPPER_NAME = "stopper";
+  public static final String ADJUSTER_BOTTOM_NAME = "adjuster_bottom";
+  public static final String ADJUSTER_TOP_NAME = "adjuster_top";
 
-  public static final String LAUNCHER_LEFT_NAME = "flywheel_left";
-  public static final String LAUNCHER_RIGHT_NAME = "flywheel_right";
+  public static final String LAUNCHER_NAME = "flywheel";
 
-  public static final String LIGHT_NAME = "light";
+  // public static final String LIGHT_NAME = "light";
   // ---------------------------------------------------------------------------
 
 
@@ -48,8 +49,8 @@ public class ASBotConfig {
   public static final double LIGHT_GREEN = 0.472;
   public static final double LIGHT_RED = 0.3;
 
-  public static final Pose BLUE_TARGET_POSE = new Pose(72-65, 72+66);
-  public static final Pose RED_TARGET_POSE = new Pose(72+65, 72+66);
+  // public static final Pose BLUE_TARGET_POSE = new Pose(72-65, 72+66);
+  // public static final Pose RED_TARGET_POSE = new Pose(72+65, 72+66);
   // ---------------------------------------------------------------------------
 
 
@@ -78,6 +79,10 @@ public class ASBotConfig {
    *****************************************************************************/
   public static final double STOPPER_OPEN_POS = 0.0;
   public static final double STOPPER_CLOSE_POS = 0.25;
+  
+  public static final double ADJUSTER_TIGHTEN_POS = 0.65;
+  public static final double ADJUSTER_LOOSEN_POS = 0.85;
+  
   // ---------------------------------------------------------------------------
 
 

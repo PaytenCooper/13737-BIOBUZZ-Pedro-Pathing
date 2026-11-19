@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 
-public abstract class AS_Action {
+public abstract class ASAction {
 
     public abstract void onStart();
 

@@ -82,7 +82,7 @@ public class ASDriveMotors {
         this.frontRight.setTargetPosition(0);
         this.backRight.setTargetPosition(0);
 
-        //this.distSensor = auto.hardwareMap.get(DistanceSensor.class, BotConfig.DISTANCE_SENSOR_NAME);
+        // this.distSensor = auto.hardwareMap.get(DistanceSensor.class, BotConfig.DISTANCE_SENSOR_NAME);
 
         this.odometry = auto.hardwareMap.get(GoBildaPinpointDriver.class, "odo");
 
@@ -129,8 +129,8 @@ public class ASDriveMotors {
         an incorrect starting value for x, y, and heading.
          */
         //odo.recalibrateIMU();
-        this.odometry.resetPosAndIMU();
-        this.odometry.setPosition( new Pose2D(DistanceUnit.MM, 0, 0, AngleUnit.DEGREES, 0) );
+        // this.odometry.resetPosAndIMU();
+        // this.odometry.setPosition( new Pose2D(DistanceUnit.MM, 0, 0, AngleUnit.DEGREES, 0) );
     }
 
     // Call in auto process loop
@@ -254,11 +254,11 @@ public class ASDriveMotors {
         auto.telemetry.addData("drivemotors yError", yError);
         auto.telemetry.addData("drivemotors angleError", targetHeading - heading);
 
-        // auto.telemetry.addData("drivemotors forwardPower", forwardPower);
-        // auto.telemetry.addData("drivemotors horizontalPower", horizontalPower);
-        // auto.telemetry.addData("drivemotors anglePower", anglePower);
+        auto.telemetry.addData("drivemotors forwardPower", forwardPower);
+        auto.telemetry.addData("drivemotors horizontalPower", horizontalPower);
+        auto.telemetry.addData("drivemotors anglePower", anglePower);
 
-        // auto.telemetry.addData("device status", odometry.getDeviceStatus());
+        auto.telemetry.addData("device status", odometry.getDeviceStatus());
     }
 
 
@@ -380,4 +380,3 @@ public class ASDriveMotors {
         return odometry.getVelY(DistanceUnit.MM);
     }
 }
-

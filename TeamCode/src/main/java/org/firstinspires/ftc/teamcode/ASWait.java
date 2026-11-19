@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+// Not on robot yet
 
 public class ASWait extends AS_Action {
     ASAuto auto;

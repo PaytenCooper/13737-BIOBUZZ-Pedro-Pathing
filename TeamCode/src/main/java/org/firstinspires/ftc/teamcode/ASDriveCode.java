@@ -14,7 +14,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
 @TeleOp(name="Field Centric (pedro)", group="DriveCodes")
-@Disabled
+// @Disabled
 public class ASDriveCode extends LinearOpMode {
 
     // Constants
@@ -166,7 +166,7 @@ public class ASDriveCode extends LinearOpMode {
             double leftStickYGP2 = gamepad2.left_stick_y;
             double rightStickYGP2 = gamepad2.right_stick_y;
 
-            // Intake
+            // // Intake
             intake.SetPower(leftStickYGP2 < 0 ? leftStickYGP2 : leftStickYGP2 / 3);
 
             // Pusher
@@ -177,6 +177,15 @@ public class ASDriveCode extends LinearOpMode {
             else {
                 intake.SetPusherPower(0);
             }
+
+             // Tighten Adjuster
+            if (gamepad1.b) {
+                launcher.TightenAdjuster();
+            }
+            else if (gamepad1.a) {
+                launcher.LoosenAdjuster();
+            }
+            
 
             // Stopper
             intake.SetStopper(gamepad2.dpad_down || gamepad2.right_trigger > 0.5);

@@ -6,6 +6,7 @@ import com.pedropathing.geometry.Pose;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
+// Not on robot yet
 
 @Autonomous(name = "Test Auto", /*preselectTeleOp="Your Drive Code Here",*/ group="test")
 // @Disabled
