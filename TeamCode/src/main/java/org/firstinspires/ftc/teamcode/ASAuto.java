@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
-// import com.pedropathing.follower.Follower;
-// import com.pedropathing.paths.PathConstraints;
+import com.pedropathing.follower.Follower;
+import com.pedropathing.paths.PathConstraints;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import java.util.Arrays;
@@ -30,8 +30,8 @@ public abstract class ASAuto extends LinearOpMode {
         launcher = new ASLauncher(this);
 
         // Assign needed variables
-        // follower = Constants.createFollower(hardwareMap);
-        // ASDriveCodeBlue.follower = follower;
+        follower = Constants.createFollower(hardwareMap);
+        ASDriveCode.follower = follower;
 
         // Run class initialization funcs
 
@@ -69,26 +69,26 @@ public abstract class ASAuto extends LinearOpMode {
             // Process classes
             // Add, remove, modify depending on how your robot works
             launcher.process();
-            //follower.update();
+            follower.update();
 
             // // Loop telemetry; updates constantly
-            // telemetry.addData("Robot stuck", follower.isRobotStuck());
+            telemetry.addData("Robot stuck", follower.isRobotStuck());
 
-            // telemetry.update();
+            telemetry.update();
         }
     }
 
-    // public void SetColor(Color color) {
-    //     switch (color) {
-    //         case BLUE:
-    //             // ASDriveCodeBlue.targetPose = ASBotConfig.BLUE_TARGET_POSE;
-    //             ASDriveCode.headingOffset = 0;
-    //             break;
-    //         case RED:
-    //             // ASDriveCodeBlue.targetPose = ASBotConfig.RED_TARGET_POSE;
-    //             ASDriveCode.headingOffset = Math.PI;
-    //             break;
+    public void SetColor(Color color) {
+        switch (color) {
+            case BLUE:
+                // ASDriveCodeBlue.targetPose = ASBotConfig.BLUE_TARGET_POSE;
+                ASDriveCode.headingOffset = 0;
+                break;
+            case RED:
+                // ASDriveCodeBlue.targetPose = ASBotConfig.RED_TARGET_POSE;
+                ASDriveCode.headingOffset = Math.PI;
+                break;
 
-    //     }
-    // }
+        }
+    }
 }

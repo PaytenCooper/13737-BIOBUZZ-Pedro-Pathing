@@ -21,12 +21,12 @@ import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
-import org.firstinspires.ftc.teamcode.ASDirection;
-import org.firstinspires.ftc.teamcode.ASBotConfig;
-import org.firstinspires.ftc.teamcode.ASPIDController;
+import org.firstinspires.ftc.teamcode.Direction;
+import org.firstinspires.ftc.teamcode.BotConfig;
+import org.firstinspires.ftc.teamcode.PIDController;
 
 
-public class ASDriveMotors {
+public class DriveMotors {
 
     enum states {
         ODOMETRY,
@@ -35,10 +35,10 @@ public class ASDriveMotors {
         IDLE
     }
 
-    public static ASPIDController distanceSensorPidController = new ASPIDController(0, 0, 0);
-    public static ASPIDController forwardPidController = new ASPIDController(0.00255, 0.00000033, 0.0000025);
-    public static ASPIDController strafePidController = new ASPIDController(0.00265, 0.0000004, 0.000004);
-    public static ASPIDController imuPidController = new ASPIDController(1.4, 0, 0.0001);
+    public static PIDController distanceSensorPidController = new PIDController(0, 0, 0);
+    public static PIDController forwardPidController = new PIDController(0.00255, 0.00000033, 0.0000025);
+    public static PIDController strafePidController = new PIDController(0.00265, 0.0000004, 0.000004);
+    public static PIDController imuPidController = new PIDController(1.2, 0, 0.001);
 
     static Orientation angles;
 
@@ -62,27 +62,27 @@ public class ASDriveMotors {
     public double targetHeading;
 
     public int targetDistance;
-
+    
     ElapsedTime odometryTimer = new ElapsedTime();
-
+    
     public double heading = 0;
     double deltaTime = 0;
 
 
-    public ASDriveMotors(LinearOpMode auto) {
+    public DriveMotors(LinearOpMode auto) {
         this.auto = auto;
 
-        this.frontRight = auto.hardwareMap.get(DcMotorEx.class, ASBotConfig.FRONT_RIGHT_WHEEL_NAME);
-        this.frontLeft = auto.hardwareMap.get(DcMotorEx.class, ASBotConfig.FRONT_LEFT_WHEEL_NAME);
-        this.backLeft = auto.hardwareMap.get(DcMotorEx.class, ASBotConfig.BACK_LEFT_WHEEL_NAME);
-        this.backRight = auto.hardwareMap.get(DcMotorEx.class, ASBotConfig.BACK_RIGHT_WHEEL_NAME);
-
+        this.frontRight = auto.hardwareMap.get(DcMotorEx.class, BotConfig.FRONT_RIGHT_WHEEL_NAME);
+        this.frontLeft = auto.hardwareMap.get(DcMotorEx.class, BotConfig.FRONT_LEFT_WHEEL_NAME);
+        this.backLeft = auto.hardwareMap.get(DcMotorEx.class, BotConfig.BACK_LEFT_WHEEL_NAME);
+        this.backRight = auto.hardwareMap.get(DcMotorEx.class, BotConfig.BACK_RIGHT_WHEEL_NAME);
+        
         this.backLeft.setTargetPosition(0);
         this.frontLeft.setTargetPosition(0);
         this.frontRight.setTargetPosition(0);
         this.backRight.setTargetPosition(0);
-
-        // this.distSensor = auto.hardwareMap.get(DistanceSensor.class, BotConfig.DISTANCE_SENSOR_NAME);
+    
+        //this.distSensor = auto.hardwareMap.get(DistanceSensor.class, BotConfig.DISTANCE_SENSOR_NAME);
 
         this.odometry = auto.hardwareMap.get(GoBildaPinpointDriver.class, "odo");
 
@@ -100,7 +100,7 @@ public class ASDriveMotors {
         the tracking point the Y (strafe) odometry pod is. forward of center is a positive number,
         backwards is a negative number.
          */
-        this.odometry.setOffsets(-100, -25, DistanceUnit.MM); 
+        this.odometry.setOffsets(182.5, -37.5, DistanceUnit.MM); 
 
         /*
         Set the kind of pods used by your robot. If you're using goBILDA odometry pods, select either
@@ -129,14 +129,14 @@ public class ASDriveMotors {
         an incorrect starting value for x, y, and heading.
          */
         //odo.recalibrateIMU();
-        // this.odometry.resetPosAndIMU();
-        // this.odometry.setPosition( new Pose2D(DistanceUnit.MM, 0, 0, AngleUnit.DEGREES, 0) );
+        this.odometry.resetPosAndIMU();
+        this.odometry.setPosition( new Pose2D(DistanceUnit.MM, 0, 0, AngleUnit.DEGREES, 0) );
     }
 
-    // Call in auto process loop
+
     public double process() {
         deltaTime = deltaTimer.seconds();
-
+        
         // Get the heading of the bot (the angle it is facing) in radians
         double newHeading = odometry.getHeading(AngleUnit.RADIANS);
         if (!Double.isNaN(newHeading)) {
@@ -148,24 +148,24 @@ public class ASDriveMotors {
                 SetToRunWithVelocity();
                 driveWithOdometry(deltaTime);
                 break;
-
+            
             case DISTANCE:
                 SetToRunWithPower();
                 driveWithDistanceSensor(deltaTime);
                 break;
-
+            
             case POWER:
                 SetToRunWithPower();
                 break;
         }
-
+        
         auto.telemetry.addData("X pos", this.odometry.getPosX(DistanceUnit.MM));
         auto.telemetry.addData("Y pos", this.odometry.getPosY(DistanceUnit.MM));
         auto.telemetry.addData("drivemotors heading", this.heading);
-
+        
         this.odometry.update();
         deltaTimer.reset();
-
+        
         return deltaTime;
     }
 
@@ -180,31 +180,29 @@ public class ASDriveMotors {
     }
 
 
-    public void DriveAndAim(double forward, double strafe, double targetAngle, double maxSpeed, double angleOffset) {
+    public void DriveAndAim(double forward, double strafe, double targetAngle) {
         this.state = states.POWER;
-        double anglePower = imuPidController.PIDControlRadians(targetAngle + angleOffset, heading, deltaTime);
-
+        double anglePower = imuPidController.PIDControlRadians(targetAngle, this.heading, deltaTime);
+        
         DriveWithPower(
-                ( forward + strafe) * maxSpeed + ( anglePower ), // Back left
-                ( forward - strafe) * maxSpeed + ( anglePower ), // Front left
-                (-forward - strafe) * maxSpeed + ( anglePower ), // Front right
-                (-forward + strafe) * maxSpeed + ( anglePower )  // Back right
+            ( forward + strafe + ( anglePower )), // Back left
+            ( forward - strafe + ( anglePower )), // Front left
+            (-forward - strafe + ( anglePower )), // Front right
+            (-forward + strafe + ( anglePower ))  // Back right
         );
-
-        auto.telemetry.addData("Angle Error", imuPidController.lastError);
     }
 
 
-    public void DriveAndAim(double forward, double strafe, double targetX, double targetY, double maxSpeed, double angleOffset) {
+    public void DriveAndAim(double forward, double strafe, double targetX, double targetY) {
         double xPos = odometry.getPosX(DistanceUnit.MM);
         double yPos = odometry.getPosY(DistanceUnit.MM);
 
-        double deltaX = targetX - xPos;
-        double deltaY = targetY - yPos;
+        double deltaX = xPos - targetX;
+        double deltaY = yPos - targetY;
 
         double targetAngle = Math.atan2(deltaY, deltaX);
 
-        DriveAndAim(forward, strafe, targetAngle, maxSpeed, angleOffset);
+        DriveAndAim(forward, strafe, targetAngle);
     }
 
 
@@ -216,11 +214,11 @@ public class ASDriveMotors {
 
         // Rotate the movement vector to convert field relative direction to robot relative direction
         double forwardError =
-                xError * Math.cos(-heading) -
-                        yError * Math.sin(-heading);
+            xError * Math.cos(-heading) -
+            yError * Math.sin(-heading);
         double horizontalError =
-                xError * Math.sin(-heading) +
-                        yError * Math.cos(-heading);
+            xError * Math.sin(-heading) +
+            yError * Math.cos(-heading);
 
         // Get powers from PID
         double forwardPower = forwardPidController.PIDControl(forwardError, delta);
@@ -248,31 +246,31 @@ public class ASDriveMotors {
         frontLeft.setPower(frontLeftPower);
         frontRight.setPower(frontRightPower);
         backRight.setPower(backRightPower);
-
+        
         // Telemetry
         auto.telemetry.addData("drivemotors xError", xError);
         auto.telemetry.addData("drivemotors yError", yError);
         auto.telemetry.addData("drivemotors angleError", targetHeading - heading);
-
-        auto.telemetry.addData("drivemotors forwardPower", forwardPower);
-        auto.telemetry.addData("drivemotors horizontalPower", horizontalPower);
-        auto.telemetry.addData("drivemotors anglePower", anglePower);
-
-        auto.telemetry.addData("device status", odometry.getDeviceStatus());
+        
+        // auto.telemetry.addData("drivemotors forwardPower", forwardPower);
+        // auto.telemetry.addData("drivemotors horizontalPower", horizontalPower);
+        // auto.telemetry.addData("drivemotors anglePower", anglePower);
+        
+        // auto.telemetry.addData("device status", odometry.getDeviceStatus());
     }
 
 
     public void driveWithDistanceSensor(double delta) {
         double dist = distSensor.getDistance(DistanceUnit.MM);
         double error = targetDistance - dist;
-
+        
         double power = distanceSensorPidController.PIDControl(error, delta);
 
         frontLeft.setPower(-power);
         frontRight.setPower(power);
         backLeft.setPower(-power);
         backRight.setPower(power);
-
+        
         auto.telemetry.addData("dist", dist);
         auto.telemetry.addData("error", error);
         auto.telemetry.addData("power", power);
@@ -311,15 +309,15 @@ public class ASDriveMotors {
     public boolean isDone() {
         switch (this.state) {
             case ODOMETRY:
-                return odometryTimer.milliseconds() > 750 &&
-                        (Math.abs(forwardPidController.lastError) < 20) && // max vertical error - MM
-                        (Math.abs(strafePidController.lastError) < 20) && // max horizontal error - MM
-                        (Math.abs(imuPidController.lastError) < .03); // max angle error - radians
-
+                return odometryTimer.milliseconds() > 750 && 
+                    (Math.abs(forwardPidController.lastError) < 20) && // max vertical error - MM
+                    (Math.abs(strafePidController.lastError) < 20) && // max horizontal error - MM
+                    (Math.abs(imuPidController.lastError) < .03); // max angle error - radians
+            
             case DISTANCE:
                 return (Math.abs(distanceSensorPidController.lastError) < 5);
         }
-
+        
         return true;
     }
 
@@ -338,45 +336,45 @@ public class ASDriveMotors {
         this.backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         this.backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
-
-
+  
+  
     private void SetZeroBehaviour() {
         this.frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         this.frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         this.backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         this.backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
-
-
+    
+    
     private void ResetEncoders() {
         this.frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         this.frontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         this.backLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         this.backRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     }
-
-
+    
+    
     public double GetX() {
         return odometry.getPosX(DistanceUnit.MM);
     }
-
-
+    
+    
     public double GetY() {
         return odometry.getPosY(DistanceUnit.MM);
     }
-
-
+    
+    
     public double GetHeading() {
         return heading;
     }
-
-
-    public double getVelX() {
-        return odometry.getVelX(DistanceUnit.MM);
-    }
-
-
-    public double getVelY() {
-        return odometry.getVelY(DistanceUnit.MM);
+    
+    
+    public double GetHeading(AngleUnit angleUnit) {
+        switch(angleUnit) {
+            case AngleUnit.DEGREES:
+                return heading * 180 / Math.PI;
+        }
+        
+        return heading;
     }
 }
