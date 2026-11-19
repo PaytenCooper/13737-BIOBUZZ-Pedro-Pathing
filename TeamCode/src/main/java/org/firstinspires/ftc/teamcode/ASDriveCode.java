@@ -200,9 +200,9 @@ public class ASDriveCode extends LinearOpMode {
             // Telemetry
             telemetry.addData("headingOffset", headingOffset);
 
-            telemetry.addData("x", aPosX);
-            telemetry.addData("y", aPosY);
-            telemetry.addData("h", aPosHeading);
+            //telemetry.addData("x", aPosX);
+            //telemetry.addData("y", aPosY);
+            //telemetry.addData("h", aPosHeading);
 
             telemetry.update();
         }
