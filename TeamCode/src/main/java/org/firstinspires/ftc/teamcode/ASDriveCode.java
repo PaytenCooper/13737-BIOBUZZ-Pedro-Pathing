@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.pedropathing.api.PoseFactory;
-import com.pedropathing.math.Pose;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
@@ -14,6 +12,7 @@ import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
 
 @TeleOp(name="Field Centric (pedro)", group="DriveCodes")
 // @Disabled
@@ -28,15 +27,13 @@ public class ASDriveCode extends LinearOpMode {
     ASIntake intake;
     ASLauncher launcher;
 
-    final PoseFactory p = PoseFactory.degrees();
-
     // Vars
-    public static double headingOffset = 0;
+    double headingOffset = 0;
 
-    Pose storedPose = p.of(0, 0, 0);
-    Pose holdPose;
+    //Pose2D storedPose = new Pose(0, 0, Math.toRadians(0));
 
-    boolean prevY = false;
+    //double targetX = 825;
+    //double targetY = -225;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -83,36 +80,46 @@ public class ASDriveCode extends LinearOpMode {
             // strafing is slower than rolling, bump horizontal speed
             rotatedX *= ASBotConfig.STRAFE_MULT;
 
-            // set pin locations when corresponding dpad buttons are pressed
-            if (gamepad1.dpad_left) {
-                storedPose = p.of(
-                        driveMotors.GetX(),
-                        driveMotors.GetY(),
-                        -driveMotors.GetHeading()
-                );
-            }
+            // set pin locations when corrosponding dpad buttons are pressed
+            //if (gamepad1.dpad_down) {
+            //    aPosX = driveMotors.GetX();
+            //    aPosY = driveMotors.GetY();
+            //    aPosHeading = -Math.toDegrees(driveMotors.GetHeading());
+            //}
+            //else if (gamepad1.dpad_left) {
+            //    xPosX = driveMotors.GetX();
+            //    xPosY = driveMotors.GetY();
+            //    xPosHeading = -Math.toDegrees(driveMotors.GetHeading());
+            //}
+
             // track pin locations when respective buttons are being pressed
-            if (gamepad1.x) {
-                driveMotors.Move(
-                        storedPose.x(),
-                        storedPose.y(),
-                        storedPose.heading()
-                );
-            }
-            else if (gamepad1.y) {
-                if (!prevY) {
-                    holdPose = p.of(
-                            driveMotors.GetX(),
-                            driveMotors.GetY(),
-                            -driveMotors.GetHeading()
-                    );
-                }
-                driveMotors.Move(
-                        holdPose.x(),
-                        holdPose.y(),
-                        holdPose.heading()
-                );
-            }
+            //if (gamepad1.a) {
+            //    driveMotors.Move(
+            //            aPosY,
+            //            aPosX,
+            //            aPosHeading
+            //    );
+            //}
+            //else if (gamepad1.x) {
+            //    driveMotors.Move(
+            //            xPosX,
+            //            xPosY,
+            //            xPosHeading
+            //    );
+            //}
+            //else if (gamepad1.y) {
+            //    if (!prevY) {
+            //        yPosX = driveMotors.GetX();
+            //        yPosY = driveMotors.GetY();
+            //        yPosHeading = -Math.toDegrees(driveMotors.GetHeading());
+            //    }
+            //    driveMotors.Move(
+            //            yPosX,
+            //            yPosY,
+            //            yPosHeading
+            //    );
+            //}
+            //
             // aim at angle for far goal when respective button pressed
             //else if (gamepad1.b) {
             //    double refX = driveMotors.GetX() - targetX;
@@ -133,7 +140,7 @@ public class ASDriveCode extends LinearOpMode {
             //}
 
             // drive normally when keybinds aren't in use
-            else {
+            //else {
                 // Set the power of the wheels based off the new joystick coordinates
                 // y+x+stick <- [-1,1]
                 driveMotors.DriveWithPower(
@@ -142,13 +149,13 @@ public class ASDriveCode extends LinearOpMode {
                         (-rotatedY - rotatedX + ( turnPower )) * maxSpeed, // Front right
                         (-rotatedY + rotatedX + ( turnPower )) * maxSpeed  // Back right
                 );
-            }
+            //}
 
-            prevY = gamepad1.y;
+            //prevY = gamepad1.y;
 
             // P2 variables
-            double leftStickYGP2 = gamepad2.left_stick_y;
-            double rightStickYGP2 = gamepad2.right_stick_y;
+            //double leftStickYGP2 = gamepad2.left_stick_y;
+            //double rightStickYGP2 = gamepad2.right_stick_y;
 
             // // Intake
             intake.SetPower(leftStickYGP1 < 0 ? leftStickYGP1 : leftStickYGP1 * INTAKE_SPIT_MULT);

@@ -1,40 +1,36 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.pedropathing.api.PoseFactory;
-import com.pedropathing.math.Pose;
-import static com.pedropathing.api.Paths.*;
-import com.pedropathing.paths.Path;
+import com.pedropathing.geometry.BezierCurve;
+import com.pedropathing.geometry.BezierLine;
+import com.pedropathing.geometry.Pose;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
+// Not on robot yet
 
-@Autonomous(name = "Blue Auto", /*preselectTeleOp="Your Drive Code Here",*/ group="blue")
+@Autonomous(name = "Blue Auto", /*preselectTeleOp="Your Drive Code Here",*/ group="test")
 // @Disabled
-public class ASBlueAuto extends ASAuto {
-    final PoseFactory p = PoseFactory.degrees();
-
+public class ASAutoTest extends ASAuto {
     // Values are in inches, 0-144 (72 is middle of the field)
-    private final Pose startPose = p.of(56, 8, 0);
-    private final Pose launchPose = p.of(82, 86, 135);
-    private final Pose humanPose = p.of(0, 0, 0); // Change name to whatever the human player zone is
-    private final Pose parkPose = p.of(0, 0, 0); //TODO
+    private final Pose startPose = new Pose(56, 8, Math.toRadians(0));
+    private final Pose launchPose = new Pose(82, 86, Math.toRadians(135));
+    private final Pose humanPose = new Pose(0, 0, Math.toRadians(0)); // Change name to whatever the human player zone is
+    private final Pose parkPose = new Pose(0, 0, Math.toRadians(0)); //TODO
 
-
-    // Returns the sequence of actions to launch held pollen/nectar
-    public ASAction launchSequence(Pose currPose) {
-        ASAction[] actions = {
+    public AS_Action[] getActions() {
+        // The sequence of actions used to launch pollen/nectar
+        AS_Action[] launchSequence = {
                 // Get ready for launching
                 new ASSpinLauncher(this),
 
                 // Move to shooting position
-                new ASFollowPath(this,
-                        path( // Action that tells the robot to move along the given path
-                                line( // Add a new bezier line to path (straight line)
-                                        currPose, // Line starting position (where the robot starts)
-                                        launchPose // Line ending position (where the robot needs to go)
-                                )
-                        )
-                        .linear(currPose, launchPose)
+                new ASFollowPath(this, follower.pathBuilder() // Action that tells the robot to move along the given path
+                        .addPath(new BezierLine( // Add a new bezier line to path (straight line)
+                            follower::getPose, // Line starting position (where the robot starts)
+                            launchPose // Line ending position (where the robot needs to go)
+                            ))
+                        .setLinearHeadingInterpolation(follower.getHeading(), launchPose.getHeading()) //TODO
+                        .build()
                 ),
 
                 // Launch!
@@ -46,60 +42,77 @@ public class ASBlueAuto extends ASAuto {
                 new ASStopIntake(this),
                 new ASStopPusher(this)
         };
-        return new ASActionSequence(this, actions);
-    }
 
-
-    public ASAction[] getActions() {
-        return new ASAction[] {
+        return new AS_Action[] {
                 // ======================= AUTO START ======================= //
 
                 // Init
                 new ASSetStartingPose(this, startPose), // Tell the robot where it will start the auto
 
                 // Launch!
-                launchSequence(startPose),
+                new ASActionSequence(this, launchSequence),
 
                 // Get ready to intake
                 new ASCloseStopper(this),
                 new ASSpinIntake(this),
                 new ASSpinPusher(this),
 
+                // Grab line
+                // new ASFollowPath(this, follower.pathBuilder()
+                //         // Grab line
+                //         .addPath(new BezierLine( // Add bezier curve to path (add curve)
+                //                 launchPose, // Curve starting position
+                //                 humanPose, // Curve ending position
+                //                 new Pose(0, 0) // Curve control point
+                //         ))
+                //         .setConstantHeadingInterpolation(Math.toRadians(270)) // Towards pollen, wherever that is
+                //         // Return to hive
+                //         .addPath(new BezierCurve(
+                //                 humanPose,
+                //                 launchPose,
+                //                 new Pose(0, 0) // Find control point
+                //         ))
+                //         .setLinearHeadingInterpolation(humanPose.getHeading(), launchPose.getHeading())
+                //         .setNoDeceleration()
+                //         .build()
+                // ),
 
-                 new ASFollowPath(this,
-                        path(
-                            line(
-                                    startPose,
-                                    p.of(55.95, 12.1, 50)
-                            )
-                        )
-                        .linear(startPose.heading(), Math.toRadians(50))
+                 new ASFollowPath(this, follower.pathBuilder()
+                        .addPath(new BezierLine(
+                                startPose,
+                                new Pose(55.95, 12.1),
+                        ))
+                        .setLinearHeadingInterpolation(follower.getHeading(), Math.toRadians(50))
+                        .build()
                 ),
+x
                 
                 new ASStopPusher(this),
                 new ASStopIntake(this),
 
+                // Launch!
+                new ASActionSequence(this, launchSequence),
+
                 // Move to parking zone
-                new ASFollowPath(this,
-                        path(
-                                line(
-                                        p.of(55.95, 12.1, 0),
-                                        p.of(55.95, 33.9, 0)
-                                ),
-                                line(
-                                        p.of(55.95, 33.9, 0),
-                                        p.of(20.41, 33.9, 0)
-                                ),
-                                line(
-                                        p.of(20.41, 33.9, 0),
-                                        p.of(19.6, 123.72, 0)
-                                ),
-                                line(
-                                        p.of(19.6, 123.72, 0),
-                                        p.of(7.06, 123.72, 0)
-                                )
-                        )
-                        .constant(Math.toRadians(90))
+                new ASFollowPath(this, follower.pathBuilder()
+                        .addPath(new BezierLine(
+                                new Pose(55.95, 12.1),
+                                new Pose(55.95, 33.9),
+                        ))
+                        .addPath(new BezierLine(
+                                new Pose(55.95, 33.9),
+                                new Pose(20.41, 33.9),
+                        ))
+                        .addPath(new BezierLine(
+                                new Pose(20.41, 33.9),
+                                new Pose(19.6, 123.72),
+                        ))
+                        .addPath(new BezierLine(
+                                new Pose(19.6, 123.72),
+                                new Pose(7.06, 123.72),
+                        ))
+                        .setConstantHeadingInterpolation(Math.toRadians(90))
+                        .build()
                 ),
                 
                 // ======================== AUTO END ======================== //

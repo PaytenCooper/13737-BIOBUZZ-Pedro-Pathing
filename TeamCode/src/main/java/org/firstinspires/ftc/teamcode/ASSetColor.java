@@ -1,7 +1,11 @@
 package org.firstinspires.ftc.teamcode;
 
 
-public class ASSetColor extends ASAction {
+import com.pedropathing.geometry.Pose;
+
+// Not on robot yet
+
+public class ASSetColor extends AS_Action {
     ASAuto auto;
     ASAuto.Color color;
 
