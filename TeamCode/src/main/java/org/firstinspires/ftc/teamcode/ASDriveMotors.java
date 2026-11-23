@@ -21,12 +21,12 @@ import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
-import org.firstinspires.ftc.teamcode.Direction;
-import org.firstinspires.ftc.teamcode.BotConfig;
-import org.firstinspires.ftc.teamcode.PIDController;
+import org.firstinspires.ftc.teamcode.ASDirection;
+import org.firstinspires.ftc.teamcode.ASBotConfig;
+import org.firstinspires.ftc.teamcode.ASPIDController;
 
 
-public class DriveMotors {
+public class ASDriveMotors {
 
     enum states {
         ODOMETRY,
@@ -35,10 +35,10 @@ public class DriveMotors {
         IDLE
     }
 
-    public static PIDController distanceSensorPidController = new PIDController(0, 0, 0);
-    public static PIDController forwardPidController = new PIDController(0.00255, 0.00000033, 0.0000025);
-    public static PIDController strafePidController = new PIDController(0.00265, 0.0000004, 0.000004);
-    public static PIDController imuPidController = new PIDController(1.2, 0, 0.001);
+    public static ASPIDController distanceSensorPidController = new ASPIDController(0, 0, 0);
+    public static ASPIDController forwardPidController = new ASPIDController(0.00255, 0.00000033, 0.0000025);
+    public static ASPIDController strafePidController = new ASPIDController(0.00265, 0.0000004, 0.000004);
+    public static ASPIDController imuPidController = new ASPIDController(1.2, 0, 0.001);
 
     static Orientation angles;
 
@@ -69,13 +69,13 @@ public class DriveMotors {
     double deltaTime = 0;
 
 
-    public DriveMotors(LinearOpMode auto) {
+    public ASDriveMotors(LinearOpMode auto) {
         this.auto = auto;
 
-        this.frontRight = auto.hardwareMap.get(DcMotorEx.class, BotConfig.FRONT_RIGHT_WHEEL_NAME);
-        this.frontLeft = auto.hardwareMap.get(DcMotorEx.class, BotConfig.FRONT_LEFT_WHEEL_NAME);
-        this.backLeft = auto.hardwareMap.get(DcMotorEx.class, BotConfig.BACK_LEFT_WHEEL_NAME);
-        this.backRight = auto.hardwareMap.get(DcMotorEx.class, BotConfig.BACK_RIGHT_WHEEL_NAME);
+        this.frontRight = auto.hardwareMap.get(DcMotorEx.class, ASBotConfig.FRONT_RIGHT_WHEEL_NAME);
+        this.frontLeft = auto.hardwareMap.get(DcMotorEx.class, ASBotConfig.FRONT_LEFT_WHEEL_NAME);
+        this.backLeft = auto.hardwareMap.get(DcMotorEx.class, ASBotConfig.BACK_LEFT_WHEEL_NAME);
+        this.backRight = auto.hardwareMap.get(DcMotorEx.class, ASBotConfig.BACK_RIGHT_WHEEL_NAME);
         
         this.backLeft.setTargetPosition(0);
         this.frontLeft.setTargetPosition(0);
@@ -371,7 +371,7 @@ public class DriveMotors {
     
     public double GetHeading(AngleUnit angleUnit) {
         switch(angleUnit) {
-            case AngleUnit.DEGREES:
+            case DEGREES:
                 return heading * 180 / Math.PI;
         }
         

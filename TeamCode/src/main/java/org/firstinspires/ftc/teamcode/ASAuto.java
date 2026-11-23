@@ -1,12 +1,11 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.pedropathing.follower.Follower;
-import com.pedropathing.paths.PathConstraints;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import java.util.Arrays;
 
-// import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
+import org.firstinspires.ftc.teamcode.pedro.Constants;
 
 
 public abstract class ASAuto extends LinearOpMode {
@@ -16,7 +15,7 @@ public abstract class ASAuto extends LinearOpMode {
     }
     abstract ASAction[] getActions();
 
-    // public Follower follower;
+    public Follower follower;
     public ASIntake intake;
     public ASLauncher launcher;
 
@@ -30,8 +29,7 @@ public abstract class ASAuto extends LinearOpMode {
         launcher = new ASLauncher(this);
 
         // Assign needed variables
-        follower = Constants.createFollower(hardwareMap);
-        ASDriveCode.follower = follower;
+        follower = Constants.create(hardwareMap);
 
         // Run class initialization funcs
 
@@ -72,7 +70,7 @@ public abstract class ASAuto extends LinearOpMode {
             follower.update();
 
             // // Loop telemetry; updates constantly
-            telemetry.addData("Robot stuck", follower.isRobotStuck());
+            //telemetry.addData("Robot stuck", follower.isRobotStuck());
 
             telemetry.update();
         }

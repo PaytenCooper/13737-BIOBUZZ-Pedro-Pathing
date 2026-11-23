@@ -1,11 +1,9 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.pedropathing.math.Pose;
 
-import com.pedropathing.geometry.Pose;
 
-// Not on robot yet
-
-public class ASSetStartingPose extends AS_Action {
+public class ASSetStartingPose extends ASAction {
     ASAuto auto;
     Pose pose;
 
@@ -15,7 +13,7 @@ public class ASSetStartingPose extends AS_Action {
     }
 
     public void onStart() {
-        auto.follower.setStartingPose(pose);
+        auto.follower.setPose(pose);
     }
 
     public boolean isDone() {
