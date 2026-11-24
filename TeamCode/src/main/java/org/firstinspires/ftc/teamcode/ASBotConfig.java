@@ -20,7 +20,7 @@ public class ASBotConfig {
 
   public static final String LAUNCHER_NAME = "flywheel";
 
-  // public static final String LIGHT_NAME = "light";
+  public static final String LIGHT_NAME = "rgb";
   // ---------------------------------------------------------------------------
 
 
@@ -42,9 +42,11 @@ public class ASBotConfig {
   // Different launcher speeds in teleop
   public static final int LAUNCHER_DROP_VELOCITY = 300;
   public static final int LAUNCHER_PASSIVE_VELOCITY = 1000;
-  public static final int LAUNCHER_VELOCITY = 1300;
+  public static final int LAUNCHER_POLLEN_VELOCITY = 1150;
+  public static final int LAUNCHER_NECTAR_VELOCITY = 1300;
   public static final int LAUNCHER_FAR_VELOCITY = 1600;
 
+  public static final double LIGHT_YELLOW = 0.388;
   public static final double LIGHT_BLUE = 0.611;
   public static final double LIGHT_GREEN = 0.472;
   public static final double LIGHT_RED = 0.3;
@@ -61,7 +63,7 @@ public class ASBotConfig {
   public static final int AUTO_PUSHER_VELOCITY = 70000;
   public static final int AUTO_PUSHER_FAR_VELOCITY = 600;
   public static final int AUTO_INTAKE_VELOCITY = -2500;
-  public static final int AUTO_LAUNCHER_VELOCITY = 1340;
+  public static final int AUTO_LAUNCHER_VELOCITY = 1150;
   public static final int AUTO_LAUNCHER_FAR_VELOCITY = 1550;
   // ---------------------------------------------------------------------------
 
@@ -77,8 +79,8 @@ public class ASBotConfig {
   /*****************************************************************************
    ** INTAKE CONSTANTS
    *****************************************************************************/
-  public static final double STOPPER_OPEN_POS = 0.0;
-  public static final double STOPPER_CLOSE_POS = 0.25;
+  public static final double STOPPER_OPEN_POS = 0.25;
+  public static final double STOPPER_CLOSE_POS = 0.0;
   
   public static final double ADJUSTER_TIGHTEN_POS = 0.65;
   public static final double ADJUSTER_LOOSEN_POS = 0.85;

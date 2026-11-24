@@ -22,7 +22,7 @@ public class ASLauncher {
     public Servo adjusterTop;
     public Servo adjusterBottom;
     
-    // Servo light;
+    Servo light;
 
     ASPIDFController launcherPIDFController = new ASPIDFController(0.0004, 0.01, 0/*.00001*/, 0.000);
 
@@ -31,6 +31,7 @@ public class ASLauncher {
 
     int launcherTargetVelocity = 0;
     boolean safe = false;
+    boolean adjusterState = true;
 
     ElapsedTime deltaTimer = new ElapsedTime();
 
@@ -43,26 +44,28 @@ public class ASLauncher {
         this.adjusterBottom = auto.hardwareMap.get(Servo.class, ASBotConfig.ADJUSTER_BOTTOM_NAME);
     
         this.launcher.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        // this.light = auto.hardwareMap.get(Servo.class, ASBotConfig.LIGHT_NAME);
+        this.light = auto.hardwareMap.get(Servo.class, ASBotConfig.LIGHT_NAME);
     }
     
     
     public void TightenAdjuster() {
+        adjusterState = true;
         adjusterTop.setPosition(ASBotConfig.ADJUSTER_TIGHTEN_POS);
         adjusterBottom.setPosition(ASBotConfig.ADJUSTER_TIGHTEN_POS);
     }
     
     
     public void LoosenAdjuster() {
+        adjusterState = false;
         adjusterTop.setPosition(ASBotConfig.ADJUSTER_LOOSEN_POS);
         adjusterBottom.setPosition(ASBotConfig.ADJUSTER_LOOSEN_POS);
     }
-
+    
 
     public double process() {
         double deltaTime = deltaTimer.seconds();
 
-        double launcherVelocity = launcher.getVelocity();
+        double launcherVelocity = -launcher.getVelocity();
 
         if (this.launcherTargetVelocity != 0) {
             double launcherPower = launcherPIDFController.PIDFControl(
@@ -71,7 +74,7 @@ public class ASLauncher {
                     deltaTime
             );
 
-            launcher.setPower(launcherPower);
+            launcher.setPower(-launcherPower);
         }
         else {
             launcher.setPower(0);
@@ -79,16 +82,13 @@ public class ASLauncher {
 
         deltaTimer.reset();
 
-        // // Light
-        // if (this.safe) {
-        //     light.setPosition(ASBotConfig.LIGHT_BLUE);
-        // }
-        // else if (this.isAtVelocity()) {
-        //     light.setPosition(ASBotConfig.LIGHT_GREEN);
-        // }
-        // else {
-        //     light.setPosition(ASBotConfig.LIGHT_RED);
-        // }
+        // Light
+        if (this.adjusterState) {
+            light.setPosition(ASBotConfig.LIGHT_YELLOW);
+        }
+        else {
+            light.setPosition(ASBotConfig.LIGHT_GREEN);
+        }
 
         // Telemetry
         auto.telemetry.addData("Launcher Velocity", getVelocity());
